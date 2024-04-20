@@ -51,7 +51,7 @@
         const form = document.getElementById('messageForm');
         const messageInput = document.getElementById('messageInput');
         const messagesDiv = document.getElementById('messages');
-        const ws = new WebSocket('wss://nightchat4.netlify.app/'); // Поменяйте адрес на ваш WebSocket-сервер
+        const ws = new WebSocket('ws://nightchat4.netlify.app');
 
         form.addEventListener('submit', function(event) {
             event.preventDefault();
