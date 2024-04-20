@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Пример чата с использованием WebSocket</title>
+<title>Пример чата с использованием AJAX</title>
 <style>
     body {
         font-family: Arial, sans-serif;
@@ -51,25 +51,20 @@
         const form = document.getElementById('messageForm');
         const messageInput = document.getElementById('messageInput');
         const messagesDiv = document.getElementById('messages');
-        const ws = new WebSocket('ws://nightchat4.netlify.app');
 
         form.addEventListener('submit', function(event) {
             event.preventDefault();
             const message = messageInput.value;
 
             if (message.trim() !== '') {
-                ws.send(message);
+                const messageDiv = document.createElement('div');
+                messageDiv.textContent = message;
+                messagesDiv.appendChild(messageDiv);
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
                 messageInput.value = '';
             }
         });
-
-        ws.onmessage = function(event) {
-            const message = event.data;
-            const messageDiv = document.createElement('div');
-            messageDiv.textContent = message;
-            messagesDiv.appendChild(messageDiv);
-            messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        };
     </script>
 </body>
 </html>
