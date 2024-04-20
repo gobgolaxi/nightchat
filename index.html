@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Пример сайта для отправки сообщений</title>
+<title>Пример чата с сохранением сообщений</title>
 <style>
     body {
         font-family: Arial, sans-serif;
@@ -18,10 +18,9 @@
         background-color: #f9f9f9;
         margin-bottom: 20px;
     }
-    input, textarea {
-        width: 100%;
+    input {
         padding: 10px;
-        margin-bottom: 10px;
+        margin-right: 10px;
     }
     button {
         padding: 10px 20px;
@@ -31,64 +30,52 @@
         border-radius: 5px;
         cursor: pointer;
     }
-    .message {
-        background-color: #f3f3f3;
+    #messages {
+        max-height: 300px;
+        overflow: auto;
         border: 1px solid #ccc;
         border-radius: 5px;
         padding: 10px;
-        margin-bottom: 10px;
     }
 </style>
 </head>
 <body>
-    <form>
-        <label for="text">Введите сообщение:</label>
-        <textarea id="text" name="text" rows="4"></textarea>
-        <button type="submit">Отправить сообщение</button>
+    <form id="messageForm">
+        <input type="text" id="messageInput" placeholder="Введите сообщение">
+        <button type="submit">Отправить</button>
     </form>
 
     <div id="messages"></div>
 
     <script>
-        const form = document.querySelector('form');
-        const textInput = document.getElementById('text');
+        const form = document.getElementById('messageForm');
+        const messageInput = document.getElementById('messageInput');
         const messagesDiv = document.getElementById('messages');
+        let messages = JSON.parse(localStorage.getItem('chatMessages')) || [];
 
-        form.addEventListener('submit', function(event) {
-            event.preventDefault();
-
-            const textValue = textInput.value;
-            if (!textValue.trim()) {
-                alert("Пожалуйста, введите текст сообщения.");
-                return;
-            }
-
-            const messageDiv = document.createElement('div');
-            messageDiv.classList.add('message');
-            messageDiv.textContent = textValue;
-
-            messagesDiv.appendChild(messageDiv);
-
-            textInput.value = '';
-
-            // Сохранение сообщения в локальное хранилище
-            const messages = JSON.parse(localStorage.getItem('messages')) || [];
-            messages.push(textValue);
-            localStorage.setItem('messages', JSON.stringify(messages));
-        });
-
-        // Загрузка сообщений из локального хранилища при загрузке страницы
-        function loadMessages() {
-            const messages = JSON.parse(localStorage.getItem('messages')) || [];
+        function renderMessages() {
+            messagesDiv.innerHTML = '';
             messages.forEach(message => {
                 const messageDiv = document.createElement('div');
-                messageDiv.classList.add('message');
                 messageDiv.textContent = message;
                 messagesDiv.appendChild(messageDiv);
             });
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
         }
 
-        loadMessages();
+        renderMessages();
+
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const message = messageInput.value;
+
+            if (message.trim() !== '') {
+                messages.push(message);
+                localStorage.setItem('chatMessages', JSON.stringify(messages));
+                renderMessages();
+                messageInput.value = '';
+            }
+        });
     </script>
 </body>
 </html>
