@@ -22,12 +22,19 @@
     .chat-messages {
         max-height: 300px;
         overflow-y: scroll;
+        margin-bottom: 10px;
+    }
+
+    .all-messages {
+        font-size: 14px;
+        color: #666;
     }
 </style>
 </head>
 <body>
 <div class="chat-container">
     <div class="chat-messages" id="chatMessages"></div>
+    <div class="all-messages" id="allMessages"></div>
     <input type="text" id="messageInput" placeholder="Введите ваше сообщение">
     <button onclick="sendMessage()">Отправить</button>
 </div>
@@ -36,7 +43,6 @@
 function sendMessage() {
     var message = document.getElementById('messageInput').value;
 
-    // Пример использования fetch API для отправки сообщения на сервер
     fetch('server_endpoint.php', {
         method: 'POST',
         headers: {
@@ -57,6 +63,7 @@ function loadMessages() {
     .then(response => response.text())
     .then(data => {
         document.getElementById('chatMessages').innerHTML = data;
+        document.getElementById('allMessages').innerHTML = "All Messages:<br>" + data.replace(/<br>/g, "<br>");
     });
 }
 
