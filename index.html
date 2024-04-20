@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Пример сайта для ввода текста и загрузки изображений</title>
+<title>Пример сайта для вв111ода текста и загрузки изображений</title>
 <style>
     body {
         font-family: Arial, sans-serif;
@@ -36,7 +36,7 @@
 </style>
 </head>
 <body>
-    <form id="form">
+    <form>
         <label for="text">Введите текст:</label>
         <textarea id="text" name="text" rows="4"></textarea>
 
@@ -49,22 +49,18 @@
     <div id="output"></div>
 
     <script>
-        document.getElementById('form').addEventListener('submit', function(event) {
+        const form = document.querySelector('form');
+        form.addEventListener('submit', function(event) {
             event.preventDefault();
-            const text = document.getElementById('text').value;
 
-            const imageInput = document.getElementById('image');
-            const image = imageInput.files[0];
-            const imageURL = URL.createObjectURL(image);
+            const textValue = document.getElementById('text').value;
+            const imageFile = document.getElementById('image').value;
 
             const outputDiv = document.getElementById('output');
-            outputDiv.innerHTML += `
-                <p>Введенный текст: ${text}</p>
-                <img src="${imageURL}" alt="Загруженное изображение">
+            outputDiv.innerHTML = `
+                <p><strong>Текст:</strong> ${textValue}</p>
+                <p><strong>Изображение:</strong> ${imageFile ? imageFile : 'Не загружено'}</p>
             `;
-
-            document.getElementById('text').value = '';
-            imageInput.value = null;
         });
     </script>
 </body>
