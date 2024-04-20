@@ -1,70 +1,75 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Пример чата с использованием AJAX</title>
+<title>Ночной Чат</title>
 <style>
     body {
         font-family: Arial, sans-serif;
         margin: 20px;
     }
-    form {
-        max-width: 600px;
-        margin: 0 auto;
-        padding: 20px;
+    #chatBox {
+        height: 300px;
+        overflow-y: scroll;
         border: 1px solid #ccc;
-        border-radius: 5px;
-        background-color: #f9f9f9;
-        margin-bottom: 20px;
-    }
-    input {
         padding: 10px;
+    }
+    #messageInput {
+        width: 80%;
+        padding: 5px;
         margin-right: 10px;
     }
-    button {
-        padding: 10px 20px;
+    #sendMessage {
+        padding: 5px 10px;
         background-color: skyblue;
         color: white;
         border: none;
         border-radius: 5px;
         cursor: pointer;
     }
-    #messages {
-        max-height: 300px;
-        overflow: auto;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        padding: 10px;
-    }
 </style>
 </head>
 <body>
-    <form id="messageForm">
-        <input type="text" id="messageInput" placeholder="Введите сообщение">
-        <button type="submit">Отправить</button>
-    </form>
-
-    <div id="messages"></div>
+    <div id="chatBox"></div>
+    <input type="text" id="messageInput" placeholder="Введите ваше сообщение">
+    <button id="sendMessage">Отправить</button>
 
     <script>
-        const form = document.getElementById('messageForm');
+        const chatBox = document.getElementById('chatBox');
         const messageInput = document.getElementById('messageInput');
-        const messagesDiv = document.getElementById('messages');
+        const sendMessageButton = document.getElementById('sendMessage');
 
-        form.addEventListener('submit', function(event) {
-            event.preventDefault();
-            const message = messageInput.value;
-
-            if (message.trim() !== '') {
-                const messageDiv = document.createElement('div');
-                messageDiv.textContent = message;
-                messagesDiv.appendChild(messageDiv);
-                messagesDiv.scrollTop = messagesDiv.scrollHeight;
-
-                messageInput.value = '';
+        sendMessageButton.addEventListener('click', function() {
+            const message = messageInput.value.trim();
+            if (message !== '') {
+                sendMessageToServer(message);
             }
+            messageInput.value = '';
         });
+
+        function sendMessageToServer(message) {
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', 'https://nightchat4.netlify.app/send-message', true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        displayMessage(message);
+                    } else {
+                        console.error('Failed to send message');
+                    }
+                }
+            };
+            xhr.send(JSON.stringify({ message: message }));
+        }
+
+        function displayMessage(message) {
+            const messageDiv = document.createElement('div');
+            messageDiv.textContent = message;
+            chatBox.appendChild(messageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight; // Прокрутка до последнего сообщения
+        }
     </script>
 </body>
 </html>
