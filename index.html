@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Пример сайта для ввода текста и загрузки изображений</title>
+<title>Пример сайта для отправки сообщений</title>
 <style>
     body {
         font-family: Arial, sans-serif;
@@ -16,6 +16,7 @@
         border: 1px solid #ccc;
         border-radius: 5px;
         background-color: #f9f9f9;
+        margin-bottom: 20px;
     }
     input, textarea {
         width: 100%;
@@ -30,48 +31,64 @@
         border-radius: 5px;
         cursor: pointer;
     }
-    #output {
-        margin-top: 20px;
+    .message {
+        background-color: #f3f3f3;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 10px;
+        margin-bottom: 10px;
     }
 </style>
 </head>
 <body>
     <form>
-        <label for="text">Введите текст:</label>
+        <label for="text">Введите сообщение:</label>
         <textarea id="text" name="text" rows="4"></textarea>
-
-        <label for="image">Загрузите изображение:</label>
-        <input type="file" id="image" name="image">
-
-        <button type="submit">Отправить</button>
+        <button type="submit">Отправить сообщение</button>
     </form>
 
-    <div id="output"></div>
+    <div id="messages"></div>
 
     <script>
         const form = document.querySelector('form');
         const textInput = document.getElementById('text');
-        const imageInput = document.getElementById('image');
-        const outputDiv = document.getElementById('output');
+        const messagesDiv = document.getElementById('messages');
 
         form.addEventListener('submit', function(event) {
             event.preventDefault();
-            localStorage.setItem('text', textInput.value);
-            localStorage.setItem('image', imageInput.value);
-            showData();
+
+            const textValue = textInput.value;
+            if (!textValue.trim()) {
+                alert("Пожалуйста, введите текст сообщения.");
+                return;
+            }
+
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message');
+            messageDiv.textContent = textValue;
+
+            messagesDiv.appendChild(messageDiv);
+
+            textInput.value = '';
+
+            // Сохранение сообщения в локальное хранилище
+            const messages = JSON.parse(localStorage.getItem('messages')) || [];
+            messages.push(textValue);
+            localStorage.setItem('messages', JSON.stringify(messages));
         });
 
-        function showData() {
-            const textValue = localStorage.getItem('text') || '';
-            const imageFile = localStorage.getItem('image') || '';
-
-            outputDiv.innerHTML = `
-                <p><strong>Текст:</strong> ${textValue}</p>
-                <p><strong>Изображение:</strong> ${imageFile ? imageFile : 'Не загружено'}</p>
-            `;
+        // Загрузка сообщений из локального хранилища при загрузке страницы
+        function loadMessages() {
+            const messages = JSON.parse(localStorage.getItem('messages')) || [];
+            messages.forEach(message => {
+                const messageDiv = document.createElement('div');
+                messageDiv.classList.add('message');
+                messageDiv.textContent = message;
+                messagesDiv.appendChild(messageDiv);
+            });
         }
 
-        showData();
+        loadMessages();
     </script>
 </body>
 </html>
