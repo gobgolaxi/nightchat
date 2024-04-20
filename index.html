@@ -1,75 +1,67 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ночной Чат</title>
+<title>Night Chat</title>
 <style>
     body {
         font-family: Arial, sans-serif;
-        margin: 20px;
+        margin: 0;
+        padding: 0;
     }
-    #chatBox {
-        height: 300px;
-        overflow-y: scroll;
+
+    .chat-container {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px;
         border: 1px solid #ccc;
-        padding: 10px;
-    }
-    #messageInput {
-        width: 80%;
-        padding: 5px;
-        margin-right: 10px;
-    }
-    #sendMessage {
-        padding: 5px 10px;
-        background-color: skyblue;
-        color: white;
-        border: none;
         border-radius: 5px;
-        cursor: pointer;
+    }
+
+    .chat-messages {
+        max-height: 300px;
+        overflow-y: scroll;
     }
 </style>
 </head>
 <body>
-    <div id="chatBox"></div>
+<div class="chat-container">
+    <div class="chat-messages" id="chatMessages"></div>
     <input type="text" id="messageInput" placeholder="Введите ваше сообщение">
-    <button id="sendMessage">Отправить</button>
+    <button onclick="sendMessage()">Отправить</button>
+</div>
 
-    <script>
-        const chatBox = document.getElementById('chatBox');
-        const messageInput = document.getElementById('messageInput');
-        const sendMessageButton = document.getElementById('sendMessage');
+<script>
+function sendMessage() {
+    var message = document.getElementById('messageInput').value;
 
-        sendMessageButton.addEventListener('click', function() {
-            const message = messageInput.value.trim();
-            if (message !== '') {
-                sendMessageToServer(message);
-            }
-            messageInput.value = '';
-        });
+    // Пример использования fetch API для отправки сообщения на сервер
+    fetch('server_endpoint.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message: message }),
+    })
+    .then(response => response.text())
+    .then(data => {
+        console.log('Message sent successfully');
+        document.getElementById('messageInput').value = '';
+        loadMessages(); // Перезагрузка сообщений после отправки
+    });
+}
 
-        function sendMessageToServer(message) {
-            const xhr = new XMLHttpRequest();
-            xhr.open('POST', 'https://nightchat4.netlify.app/send-message', true);
-            xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    if (xhr.status === 200) {
-                        displayMessage(message);
-                    } else {
-                        console.error('Failed to send message');
-                    }
-                }
-            };
-            xhr.send(JSON.stringify({ message: message }));
-        }
+function loadMessages() {
+    fetch('server_endpoint.php')
+    .then(response => response.text())
+    .then(data => {
+        document.getElementById('chatMessages').innerHTML = data;
+    });
+}
 
-        function displayMessage(message) {
-            const messageDiv = document.createElement('div');
-            messageDiv.textContent = message;
-            chatBox.appendChild(messageDiv);
-            chatBox.scrollTop = chatBox.scrollHeight; // Прокрутка до последнего сообщения
-        }
-    </script>
+// Загрузка сообщений при загрузке страницы
+loadMessages();
+</script>
 </body>
 </html>
