@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Пример сайта для вв111ода текста и загрузки изображений</title>
+<title>Пример сайта для ввода текста и загрузки изображений</title>
 <style>
     body {
         font-family: Arial, sans-serif;
@@ -50,18 +50,28 @@
 
     <script>
         const form = document.querySelector('form');
+        const textInput = document.getElementById('text');
+        const imageInput = document.getElementById('image');
+        const outputDiv = document.getElementById('output');
+
         form.addEventListener('submit', function(event) {
             event.preventDefault();
+            localStorage.setItem('text', textInput.value);
+            localStorage.setItem('image', imageInput.value);
+            showData();
+        });
 
-            const textValue = document.getElementById('text').value;
-            const imageFile = document.getElementById('image').value;
+        function showData() {
+            const textValue = localStorage.getItem('text') || '';
+            const imageFile = localStorage.getItem('image') || '';
 
-            const outputDiv = document.getElementById('output');
             outputDiv.innerHTML = `
                 <p><strong>Текст:</strong> ${textValue}</p>
                 <p><strong>Изображение:</strong> ${imageFile ? imageFile : 'Не загружено'}</p>
             `;
-        });
+        }
+
+        showData();
     </script>
 </body>
 </html>
