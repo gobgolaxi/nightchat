@@ -1,74 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Night Chat</title>
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-    }
-
-    .chat-container {
-        max-width: 800px;
-        margin: 20px auto;
-        padding: 20px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-    }
-
-    .chat-messages {
-        max-height: 300px;
-        overflow-y: scroll;
-        margin-bottom: 10px;
-    }
-
-    .all-messages {
-        font-size: 14px;
-        color: #666;
-    }
-</style>
+    <title>Простой Чат</title>
 </head>
 <body>
-<div class="chat-container">
-    <div class="chat-messages" id="chatMessages"></div>
-    <div class="all-messages" id="allMessages"></div>
-    <input type="text" id="messageInput" placeholder="Введите ваше сообщение">
-    <button onclick="sendMessage()">Отправить</button>
-</div>
+    <h1>Простой Чат</h1>
+    
+    <div id="chat-box" style="height: 300px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px;">
+        <?php include 'show_messages.php'; ?>
+    </div>
 
-<script>
-function sendMessage() {
-    var message = document.getElementById('messageInput').value;
-
-    fetch('server_endpoint.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ message: message }),
-    })
-    .then(response => response.text())
-    .then(data => {
-        console.log('Message sent successfully');
-        document.getElementById('messageInput').value = '';
-        loadMessages(); // Перезагрузка сообщений после отправки
-    });
-}
-
-function loadMessages() {
-    fetch('server_endpoint.php')
-    .then(response => response.text())
-    .then(data => {
-        document.getElementById('chatMessages').innerHTML = data;
-        document.getElementById('allMessages').innerHTML = "All Messages:<br>" + data.replace(/<br>/g, "<br>");
-    });
-}
-
-// Загрузка сообщений при загрузке страницы
-loadMessages();
-</script>
+    <form method="POST" action="post_message.php">
+        <input type="text" name="message" placeholder="Введите ваше сообщение">
+        <button type="submit">Отправить</button>
+    </form>
 </body>
 </html>
