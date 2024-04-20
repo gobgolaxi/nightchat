@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Пример чата с сохранением сообщений</title>
+<title>Пример чата с использованием WebSocket</title>
 <style>
     body {
         font-family: Arial, sans-serif;
@@ -51,31 +51,25 @@
         const form = document.getElementById('messageForm');
         const messageInput = document.getElementById('messageInput');
         const messagesDiv = document.getElementById('messages');
-        let messages = JSON.parse(localStorage.getItem('chatMessages')) || [];
-
-        function renderMessages() {
-            messagesDiv.innerHTML = '';
-            messages.forEach(message => {
-                const messageDiv = document.createElement('div');
-                messageDiv.textContent = message;
-                messagesDiv.appendChild(messageDiv);
-            });
-            messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        }
-
-        renderMessages();
+        const ws = new WebSocket('ws://localhost:3000'); // Поменяйте адрес на ваш WebSocket-сервер
 
         form.addEventListener('submit', function(event) {
             event.preventDefault();
             const message = messageInput.value;
 
             if (message.trim() !== '') {
-                messages.push(message);
-                localStorage.setItem('chatMessages', JSON.stringify(messages));
-                renderMessages();
+                ws.send(message);
                 messageInput.value = '';
             }
         });
+
+        ws.onmessage = function(event) {
+            const message = event.data;
+            const messageDiv = document.createElement('div');
+            messageDiv.textContent = message;
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        };
     </script>
 </body>
 </html>
