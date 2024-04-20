@@ -8,7 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Добавляем сообщение в файл (наивный пример)
     $file = 'messages.txt';
     $current = file_get_contents($file);
-    $current .= $message . "<br>";
+    $current .= $message . "\n";
     file_put_contents($file, $current);
     
     echo "Message sent successfully!";
@@ -16,6 +16,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Вывод сообщений из файла (наивный пример)
     $file = 'messages.txt';
     $messages = file_get_contents($file);
-    echo $messages;
+    echo nl2br($messages);
 }
 ?>
