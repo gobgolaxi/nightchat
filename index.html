@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Пример сайта для ввода текста и загрузки изображений</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+    }
+    form {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    }
+    input, textarea {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+    button {
+        padding: 10px 20px;
+        background-color: skyblue;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+</style>
+</head>
+<body>
+    <form>
+        <label for="text">Введите текст:</label>
+        <textarea id="text" name="text" rows="4"></textarea>
+
+        <label for="image">Загрузите изображение:</label>
+        <input type="file" id="image" name="image">
+
+        <button type="submit">Отправить</button>
+    </form>
+</body>
+</html>
