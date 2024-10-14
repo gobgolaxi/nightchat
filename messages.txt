@@ -48,11 +48,9 @@ local function aimAtTarget()
         if closestPlayer and closestPlayer.Character and closestPlayer.Character:FindFirstChild("HumanoidRootPart") then
             local targetPosition = closestPlayer.Character.HumanoidRootPart.Position
             
-            -- Угол поворота камеры к цели
             local camera = workspace.CurrentCamera
             camera.CFrame = CFrame.new(camera.CFrame.Position, targetPosition)
 
-            -- Поворачиваем игрока к цели
             if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
                 player.Character.HumanoidRootPart.CFrame = CFrame.new(player.Character.HumanoidRootPart.Position, targetPosition)
             end
@@ -120,7 +118,6 @@ local function createGUI()
     MenuFrame.Position = UDim2.new(0.35, 0, 0.25, 0)
     MenuFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
     MenuFrame.BorderSizePixel = 0
-
     Instance.new("UICorner", MenuFrame)
 
     createLabel(MenuFrame, "DoomsMenu", UDim2.new(0, 0, 0, 0), UDim2.new(1, 0, 0.2, 0))
@@ -156,28 +153,21 @@ local function createGUI()
     FlyCheckbox.Visible = false
 
     -- Chams Elements
-    local function createChamsButton(parent)
-        local ChamsButton = createButton(parent, "Chams", UDim2.new(0.2, 0, 0.65, 0), UDim2.new(0.1, 0, 0.1, 0))
-        ChamsButton.MouseButton1Click:Connect(function()
-            chamsEnabled = not chamsEnabled
-            ChamsButton.BackgroundColor3 = chamsEnabled and Color3.fromRGB(67, 130, 255) or Color3.fromRGB(50, 50, 50)
-            toggleChams()
-        end)
-        return ChamsButton
-    end
+    local ChamsButton = createButton(MenuFrame, "Chams", UDim2.new(0.2, 0, 0.65, 0), UDim2.new(0.1, 0, 0.1, 0))
+    ChamsButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    
+    ChamsButton.MouseButton1Click:Connect(function()
+        chamsEnabled = not chamsEnabled
+        ChamsButton.BackgroundColor3 = chamsEnabled and Color3.fromRGB(67, 130, 255) or Color3.fromRGB(50, 50, 50)
+        toggleChams()
+    end)
 
-    local function createChamsColorCircle(parent)
-        local ChamsColorCircle = createButton(parent, " ", UDim2.new(0.3, 0, 0.65, 0), UDim2.new(0.1, 0, 0.1, 0))
-        ChamsColorCircle.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
-        ChamsColorCircle.MouseButton1Click:Connect(function()
-            selectedColor = Color3.fromRGB(math.random(255), math.random(255), math.random(255))
-            ChamsColorCircle.BackgroundColor3 = selectedColor
-        end)
-        return ChamsColorCircle
-    end
-
-    createChamsButton(MenuFrame)
-    createChamsColorCircle(MenuFrame)
+    local ChamsColorCircle = createButton(MenuFrame, " ", UDim2.new(0.3, 0, 0.65, 0), UDim2.new(0.1, 0, 0.1, 0))
+    ChamsColorCircle.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+    ChamsColorCircle.MouseButton1Click:Connect(function()
+        selectedColor = Color3.fromRGB(math.random(255), math.random(255), math.random(255))
+        ChamsColorCircle.BackgroundColor3 = selectedColor
+    end)
 
     -- Misc Elements
     local UnloadButton = createButton(MenuFrame, "Unload", UDim2.new(0.35, 0, 0.8, 0), UDim2.new(0.3, 0, 0.2, 0))
@@ -207,7 +197,6 @@ local function createGUI()
         UnloadButton.Visible = visibleElements.Unload
         EspButton.Visible = visibleElements.Esp
         ColorCircle.Visible = visibleElements.ColorCircle
-        AimAssistButton.Visible = visibleElements.AimAssist
     end    
 
     CombatButton.MouseButton1Click:Connect(function() toggleVisibility({Test = true, Hitbox = true, HitboxSlider = true, HitboxSizeLabel = true, AimAssist = true}) end)
@@ -231,7 +220,6 @@ local function createGUI()
             while isTeleporting do
                 player.Character:MoveTo(targetPosition)
                 wait(0.5)
-                -- Perform mouse click simulation
                 local target = player:GetMouse().Target
                 if target then
                     local mouseInput = Instance.new("InputObject")
